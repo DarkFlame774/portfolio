@@ -25,8 +25,8 @@ function App() {
       {/* Custom Cursor */}
       <CustomCursor />
 
-      {/* Noise Overlay */}
-      <div className="pointer-events-none fixed inset-0 z-50 bg-noise opacity-[0.02]" />
+      {/* Noise Overlay - Optimized with transform to prevent scroll repaints */}
+      <div className="pointer-events-none fixed inset-0 z-50 bg-noise opacity-[0.02]" style={{ transform: 'translateZ(0)' }} />
 
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-[2px] bg-surface-highlight/20 z-[60]">

@@ -22,8 +22,8 @@ export const ParallaxBackground = () => {
   const mouseX = useSpring(0, { stiffness: 40, damping: 30 });
   const mouseY = useSpring(0, { stiffness: 40, damping: 30 });
   
-  // Reduced particle count from 40 to 20 for better performance
-  const particles = useMemo(() => generateParticles(20), []);
+  // Reduced particle count significantly to 8 for maximum scroll performance
+  const particles = useMemo(() => generateParticles(8), []);
 
   // Parallax mappings based on smoothed scroll
   const yLayer1 = useTransform(smoothScrollY, [0, 5000], [0, 800]);  // Far background (slow)
@@ -46,7 +46,7 @@ export const ParallaxBackground = () => {
   const mParX2 = useTransform(mouseX, [-1, 1], [30, -30]);
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#05050a]">
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#05050a]" style={{ transform: 'translateZ(0)' }}>
       
       {/* 1. Base Radial Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,#0c1020_0%,#030408_100%)] opacity-80" />
@@ -59,7 +59,8 @@ export const ParallaxBackground = () => {
             linear-gradient(90deg, rgba(34,211,238,1) 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px',
-          backgroundPosition: 'center center'
+          backgroundPosition: 'center center',
+          transform: 'translateZ(0)'
         }}
       />
 
@@ -74,7 +75,7 @@ export const ParallaxBackground = () => {
           stroke="currentColor"
           strokeWidth="0.5"
           className="w-full h-full"
-          style={{ willChange: 'transform' }}
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           animate={{ rotate: 360 }}
           transition={{ duration: 180, repeat: Infinity, ease: 'linear' }}
         >
@@ -100,7 +101,7 @@ export const ParallaxBackground = () => {
           stroke="currentColor"
           strokeWidth="0.5"
           className="w-full h-full"
-          style={{ willChange: 'transform' }}
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           animate={{ rotate: -360 }}
           transition={{ duration: 240, repeat: Infinity, ease: 'linear' }}
         >
@@ -112,16 +113,17 @@ export const ParallaxBackground = () => {
         </motion.svg>
       </motion.div>
 
-      {/* 5. Glowing Nebula/Orbs - OPTIMIZED: Replaced heavy CSS blur/mix-blend with fast radial gradients */}
+      {/* 5. Glowing Nebula/Orbs - OPTIMIZED: Removed scale animations to eliminate repaint lag */}
       <motion.div
         className="absolute -top-[20%] left-[20%] w-[700px] h-[700px]"
         style={{ 
           y: yLayer2, 
           x: mParY1, 
           willChange: 'transform, opacity',
-          background: 'radial-gradient(circle, rgba(34,211,238,0.2) 0%, transparent 60%)'
+          background: 'radial-gradient(circle, rgba(34,211,238,0.2) 0%, transparent 60%)',
+          transform: 'translateZ(0)'
         }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+        animate={{ opacity: [0.15, 0.25, 0.15] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
@@ -130,9 +132,10 @@ export const ParallaxBackground = () => {
           y: yLayer3, 
           x: mParX1, 
           willChange: 'transform, opacity',
-          background: 'radial-gradient(circle, rgba(212,165,116,0.15) 0%, transparent 60%)'
+          background: 'radial-gradient(circle, rgba(212,165,116,0.15) 0%, transparent 60%)',
+          transform: 'translateZ(0)'
         }}
-        animate={{ scale: [1, 1.3, 1], opacity: [0.12, 0.20, 0.12] }}
+        animate={{ opacity: [0.12, 0.20, 0.12] }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
       />
       <motion.div
@@ -141,9 +144,10 @@ export const ParallaxBackground = () => {
           y: yLayer1, 
           x: mParX2, 
           willChange: 'transform, opacity',
-          background: 'radial-gradient(circle, rgba(45,212,191,0.2) 0%, transparent 60%)'
+          background: 'radial-gradient(circle, rgba(45,212,191,0.2) 0%, transparent 60%)',
+          transform: 'translateZ(0)'
         }}
-        animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.28, 0.15] }}
+        animate={{ opacity: [0.15, 0.28, 0.15] }}
         transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
       />
 
@@ -158,7 +162,8 @@ export const ParallaxBackground = () => {
             width: p.size * 2,
             height: p.size * 2,
             background: `radial-gradient(circle, ${p.color}${p.opacity + 0.4}) 0%, transparent 70%)`,
-            willChange: 'transform, opacity'
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)'
           }}
           animate={{
             y: ['-10vh', '110vh'],

@@ -19,7 +19,7 @@ export const Hero = () => {
 
   return (
     <section id="hero" className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
-      <motion.div style={{ y, opacity }} className="relative z-10 max-w-4xl text-center">
+      <motion.div style={{ y, opacity, willChange: 'transform, opacity' }} className="relative z-10 max-w-4xl text-center">
         {/* Avatar placeholder */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -189,6 +189,8 @@ export const Hero = () => {
             width: 3 + (i % 3),
             height: 3 + (i % 3),
             backgroundColor: i % 2 === 0 ? 'rgba(34,211,238,0.2)' : 'rgba(212,165,116,0.15)',
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)'
           }}
           animate={{
             y: [0, -20, 0],
