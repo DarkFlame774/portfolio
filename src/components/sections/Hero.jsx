@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Github, Linkedin, Mail, ChevronDown } from 'lucide-react';
 
@@ -5,6 +6,16 @@ export const Hero = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, 150]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0.2]);
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState('/profile.png');
+
+  const handleImageError = () => {
+    if (imageSrc === '/profile.png') {
+      setImageSrc('/profile.jpg');
+    } else {
+      setImageError(true);
+    }
+  };
 
   return (
     <section id="hero" className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden">
@@ -16,10 +27,42 @@ export const Hero = () => {
           transition={{ duration: 0.8, type: 'spring' }}
           className="mx-auto mb-8"
         >
-          {/* TODO: Replace with actual photo when provided */}
-          <div className="relative mx-auto w-28 h-28 rounded-full border-2 border-gold/40 bg-surface-raised flex items-center justify-center shadow-glow-gold overflow-hidden">
-            <span className="font-display text-4xl text-gold">A</span>
-            <div className="absolute inset-0 rounded-full border border-teal/20 animate-pulse-teal" />
+          <div className="relative mx-auto w-36 h-36 rounded-full border-2 border-gold/40 bg-surface-raised flex items-center justify-center shadow-glow-gold overflow-hidden group/avatar">
+            {/* Nine Sols Solar Core Background (Shows through transparent images) */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,165,116,0.25)_0%,rgba(220,38,38,0.1)_50%,transparent_75%)] pointer-events-none" />
+            
+            {/* Rotating Sacred Geometry (Taoist/Sol-Wheel) */}
+            <svg 
+              className="absolute w-5/6 h-5/6 text-gold/20 animate-spin-slow pointer-events-none" 
+              viewBox="0 0 100 100" 
+              fill="none" 
+              stroke="currentColor"
+            >
+              <circle cx="50" cy="50" r="45" strokeWidth="0.75" strokeDasharray="3 3" />
+              <circle cx="50" cy="50" r="35" strokeWidth="1" />
+              <circle cx="50" cy="50" r="22" strokeWidth="0.5" strokeDasharray="1 2" />
+              {/* Trigram/Sun rays */}
+              <path d="M 50 5 L 50 15 M 50 85 L 50 95 M 5 50 L 15 50 M 85 50 L 95 50" strokeWidth="1" />
+              <path d="M 18 18 L 25 25 M 75 75 L 82 82 M 18 75 L 25 68 M 75 18 L 82 25" strokeWidth="1" />
+            </svg>
+
+            {!imageError ? (
+              <>
+                <img 
+                  src={imageSrc} 
+                  alt="Abhinav Profile" 
+                  onError={handleImageError}
+                  className="w-full h-full object-cover relative z-10 filter sepia-[0.25] saturate-[0.8] contrast-[1.1] brightness-[0.85] transition-all duration-500 group-hover/avatar:sepia-0 group-hover/avatar:saturate-100 group-hover/avatar:brightness-100"
+                />
+                {/* Holographic Taopunk overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gold/10 via-transparent to-teal/5 mix-blend-color pointer-events-none z-20 transition-opacity duration-500 group-hover/avatar:opacity-0" />
+                {/* Subtle scanning line effect */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,_rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none z-20 opacity-40 group-hover/avatar:opacity-10 transition-opacity duration-500" />
+              </>
+            ) : (
+              <span className="font-display text-4xl text-gold relative z-10">A</span>
+            )}
+            <div className="absolute inset-0 rounded-full border border-teal/20 animate-pulse-teal pointer-events-none z-30" />
           </div>
         </motion.div>
 
