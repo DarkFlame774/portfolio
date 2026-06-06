@@ -8,6 +8,7 @@ export const Hero = () => {
   const opacity = useTransform(scrollY, [0, 400], [1, 0.2]);
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState('/profile.png');
+  const [ResumeSrc, setResumeSrc] = useState('/Resume.pdf');
 
   const handleImageError = () => {
     if (imageSrc === '/profile.png') {
@@ -140,7 +141,7 @@ export const Hero = () => {
           </motion.button>
 
           <motion.a
-            href="#"
+            href={ResumeSrc} download = "Abhinav_Resume.pdf" blank = "_blank" rel = "noopener noreferrer"
             className="group relative px-8 py-3 font-mono text-xs uppercase tracking-widest text-gold transition-all"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -217,7 +218,7 @@ export const Hero = () => {
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="text-parchment/20"
         >
-          <ChevronDown size={20} />
+          <ChevronDown size={30} />
         </motion.div>
       </motion.div>
     </section>
