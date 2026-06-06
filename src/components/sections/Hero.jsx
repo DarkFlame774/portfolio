@@ -8,7 +8,7 @@ export const Hero = () => {
   const opacity = useTransform(scrollY, [0, 400], [1, 0.2]);
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState('/profile.png');
-  const [ResumeSrc, setResumeSrc] = useState('/Resume.pdf');
+  const [ResumeSrc, setResumeSrc] = useState('/Abhinav_Resume.pdf');
 
   const handleImageError = () => {
     if (imageSrc === '/profile.png') {
