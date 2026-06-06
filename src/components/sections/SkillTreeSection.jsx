@@ -59,7 +59,7 @@ const getAllEdges = (node, arr = []) => {
 };
 
 export const SkillTreeSection = () => {
-  const [selectedSkill, setSelectedSkill] = useState(null);
+  const [selectedSkill, setSelectedSkill] = useState(SKILL_TREE_ROOT);
   const [hoveredNode, setHoveredNode] = useState(null);
 
   const allNodes = useMemo(() => getAllNodes(SKILL_TREE_ROOT), []);
