@@ -1,10 +1,12 @@
-import { useRef, lazy, Suspense } from 'react';
+import { useRef, lazy, Suspense, useState } from 'react';
 import { useScroll, useSpring, motion, useTransform } from 'framer-motion';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { Navbar } from './components/ui/Navbar';
 import { ParallaxBackground } from './components/ui/ParallaxBackground';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
+import { InkThemeToggle } from './components/ui/InkThemeToggle';
+import { InkCanvasTransition } from './components/ui/InkCanvasTransition';
 
 // Lazy load below-the-fold components for performance
 const SkillTreeSection = lazy(() => import('./components/sections/SkillTreeSection').then(m => ({ default: m.SkillTreeSection })));
@@ -20,54 +22,109 @@ function App() {
 
   const bgOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
 
+  const [theme, setTheme] = useState('nine-sol');
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState('to-samurai');
+
+  const handleThemeToggle = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    const nextTheme = theme === 'nine-sol' ? 'samurai' : 'nine-sol';
+    setTransitionDirection(nextTheme === 'samurai' ? 'to-samurai' : 'to-nine-sol');
+
+    // Switch the layout at the midpoint of the sweep animation (600ms)
+    setTimeout(() => {
+      setTheme(nextTheme);
+    }, 600);
+    // End the animation overlay state (1200ms)
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1200);
+  };
+
   return (
     <div ref={containerRef} className="relative min-h-screen">
-      {/* Custom Cursor */}
-      <CustomCursor />
+      {/* Ink Transition Overlay & Toggle */}
+      <InkThemeToggle theme={theme} onToggle={handleThemeToggle} />
+      <InkCanvasTransition isAnimating={isAnimating} direction={transitionDirection} />
 
-      {/* Noise Overlay - Optimized with transform to prevent scroll repaints */}
-      <div className="pointer-events-none fixed inset-0 z-50 bg-noise opacity-[0.02]" style={{ transform: 'translateZ(0)' }} />
+      {theme === 'nine-sol' ? (
+        <>
+          {/* Custom Cursor */}
+          <CustomCursor />
 
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] bg-surface-highlight/20 z-[60]">
-        <motion.div
-          style={{ scaleX }}
-          className="h-full origin-left bg-gradient-to-r from-teal-dim via-teal to-gold shadow-[0_0_10px_rgba(34,211,238,0.5)]"
-        />
-      </div>
+          {/* Noise Overlay */}
+          <div className="pointer-events-none fixed inset-0 z-50 bg-noise opacity-[0.02]" style={{ transform: 'translateZ(0)' }} />
 
-      {/* Parallax Background */}
-      <ParallaxBackground />
-
-      <Navbar />
-
-      <main className="relative z-10 space-y-0 pb-32">
-        <Hero />
-        <About />
-        
-        <Suspense fallback={
-          <div className="flex h-64 items-center justify-center">
-            <div className="h-10 w-10 animate-spin rounded-full border-t-2 border-r-2 border-teal opacity-50"></div>
+          {/* Scroll Progress Bar */}
+          <div className="fixed top-0 left-0 right-0 h-[2px] bg-surface-highlight/20 z-[60]">
+            <motion.div
+              style={{ scaleX }}
+              className="h-full origin-left bg-gradient-to-r from-teal-dim via-teal to-gold shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+            />
           </div>
-        }>
-          <SkillTreeSection />
-          <Projects />
-          <ExperienceTimeline />
-          <Achievements />
-          <ContactSection />
-        </Suspense>
 
-        <footer className="border-t border-border-subtle py-12 text-center">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="font-mono text-[11px] text-parchment/20 tracking-wider"
+          {/* Parallax Background */}
+          <ParallaxBackground />
+
+          <Navbar />
+
+          <main className="relative z-10 space-y-0 pb-32">
+            <Hero />
+            <About />
+            
+            <Suspense fallback={
+              <div className="flex h-64 items-center justify-center">
+                <div className="h-10 w-10 animate-spin rounded-full border-t-2 border-r-2 border-teal opacity-50"></div>
+              </div>
+            }>
+              <SkillTreeSection />
+              <Projects />
+              <ExperienceTimeline />
+              <Achievements />
+              <ContactSection />
+            </Suspense>
+
+            <footer className="border-t border-border-subtle py-12 text-center">
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="font-mono text-[11px] text-parchment/20 tracking-wider"
+              >
+                © {new Date().getFullYear()} Abhinav · Crafted with code and curiosity
+              </motion.p>
+            </footer>
+          </main>
+        </>
+      ) : (
+        /* Samurai Theme Blank Canvas Placeholder */
+        <div className="min-h-screen bg-[#f4f4f2] text-black font-serif flex flex-col items-center justify-center relative overflow-hidden select-none">
+          {/* Subtle noise/paper texture */}
+          <div className="pointer-events-none absolute inset-0 z-10 bg-noise opacity-[0.04]" />
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              delay: 0.5, 
+              duration: 1.4, 
+              ease: [0.16, 1, 0.3, 1] 
+            }}
+            className="text-center z-20"
           >
-            © {new Date().getFullYear()} Abhinav · Crafted with code and curiosity
-          </motion.p>
-        </footer>
-      </main>
+            <h1 className="text-6xl md:text-8xl font-bold tracking-widest text-[#1a1a1a] font-display">
+              侍
+            </h1>
+            <p className="mt-6 font-mono text-xs tracking-[0.4em] text-[#666666] uppercase">
+              Samurai Mode · Active
+            </p>
+            <p className="mt-2 text-sm italic text-[#888888] font-body max-w-md px-6 leading-relaxed">
+              "In the twilight, the ink wash reveals the way of the warrior."
+            </p>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
