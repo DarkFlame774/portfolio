@@ -7,6 +7,8 @@ import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
 import { InkThemeToggle } from './components/ui/InkThemeToggle';
 import { InkCanvasTransition } from './components/ui/InkCanvasTransition';
+import { SamuraiLayout } from './components/sections/SamuraiLayout';
+import { InkBrushCursor } from './components/ui/InkBrushCursor';
 
 // Lazy load below-the-fold components for performance
 const SkillTreeSection = lazy(() => import('./components/sections/SkillTreeSection').then(m => ({ default: m.SkillTreeSection })));
@@ -98,32 +100,17 @@ function App() {
           </main>
         </>
       ) : (
-        /* Samurai Theme Blank Canvas Placeholder */
-        <div className="min-h-screen bg-[#f4f4f2] text-black font-serif flex flex-col items-center justify-center relative overflow-hidden select-none">
-          {/* Subtle noise/paper texture */}
-          <div className="pointer-events-none absolute inset-0 z-10 bg-noise opacity-[0.04]" />
-          
+        /* Samurai Theme Full Layout */
+        <>
+          <InkBrushCursor />
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              delay: 0.5, 
-              duration: 1.4, 
-              ease: [0.16, 1, 0.3, 1] 
-            }}
-            className="text-center z-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <h1 className="text-6xl md:text-8xl font-bold tracking-widest text-[#1a1a1a] font-display">
-              侍
-            </h1>
-            <p className="mt-6 font-mono text-xs tracking-[0.4em] text-[#666666] uppercase">
-              Samurai Mode · Active
-            </p>
-            <p className="mt-2 text-sm italic text-[#888888] font-body max-w-md px-6 leading-relaxed">
-              "In the twilight, the ink wash reveals the way of the warrior."
-            </p>
+            <SamuraiLayout />
           </motion.div>
-        </div>
+        </>
       )}
     </div>
   );
